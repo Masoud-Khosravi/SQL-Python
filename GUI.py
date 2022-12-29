@@ -227,8 +227,8 @@ def new_window(is_buy=False):
                       command=save_fuc)
     # ====================== List Boxes / TreeViews ====================================
     # Add a Treeview widget
-    list_invoice = Treeview(new_win, column=("c1", "c2", "c3", "c4", "c5", "c6"), show='headings', height=8)
-
+    list_invoice = Treeview(new_win, show='headings', height=8)
+    list_invoice["columns"] = ("c1", "c2", "c3", "c4", "c5", "c6")
     list_invoice.column("c1", width=25)
     list_invoice.heading("c1", text="ID")
     list_invoice.column("c2", width=80, anchor=CENTER)
