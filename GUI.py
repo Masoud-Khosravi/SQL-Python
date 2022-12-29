@@ -13,27 +13,36 @@ SQLWindow.resizable(width=False, height=False)
 
 # ========================== SQLWindow Functions ========================
 def clear_list1():
-    pass
+    list1.delete(0, END)
 
 
 def fill_list1(items):
-    pass
+    for item in items:
+        list1.insert(END, item)
 
 
 def view_sales_invoices():
-    pass
+    clear_list1()
+    sales = sql_commands.view_sells()
+    fill_list1(sales)
 
 
 def view_purchase_invoices():
-    pass
+    clear_list1()
+    buys = sql_commands.view_buys()
+    fill_list1(buys)
 
 
 def view_customers():
-    pass
+    clear_list1()
+    customers = sql_commands.view_customers()
+    fill_list1(customers)
 
 
 def view_sellers():
-    pass
+    clear_list1()
+    sellers = sql_commands.view_sellers()
+    fill_list1(sellers)
 
 
 # ========================== SQLWindow Buttons ==========================
