@@ -242,13 +242,67 @@ def new_window(is_buy=False):
 
     # ===================== event functions ==============================
     def changed_users(event):
-        pass
+        global user_index
+        selected_user = All_users.get()
+        user_selected = users.index(selected_user)
+        user_index = user_id[user_selected]
 
     def changed_wares(event):
-        pass
+        global ware_index
+        selected_ware = All_wares.get()
+        ware_selected = wares.index(selected_ware)
+        ware_index = wares_id[ware_selected]
+        btn_add_to_list.config(state="normal")
+        price = str(sql_commands.get_sell_price(ware_index))
+        ent_price.delete(0, END)  # this will delete everything inside the entry
+        ent_price.insert(END, price)
 
     def changed_combos(event):
-        pass
+        selected_cat = All_categories.get()
+        selected_brand = All_brands.get()
+        counter = 0
+        global cat_index, brand_index
+        if len(selected_cat) > 0:
+            counter += 1
+            cat_selected = categories.index(selected_cat)
+            cat_index = categories_id[cat_selected]
+        else:
+            cat_index = None
+
+        if len(selected_brand) > 0:
+            counter += 1
+            brand_selected = brands.index(selected_brand)
+            brand_index = brands_id[brand_selected]
+        else:
+            brand_index = None
+        # print(selected_cat, " ", cat_index, " ", categories_id[cat_index])
+        if counter == 2:
+            # print(brand_index, " ", cat_index)
+            result = sql_commands.view_wares(brand_index, cat_index)
+            global wares_id, wares, ware_index
+            wares = []
+            wares_id = []
+            for any_res in result:
+                wares_id.append(any_res[0])
+                wares.append(any_res[1])
+            All_wares['values'] = wares
+            if len(wares) > 0:
+                All_wares.current(0)
+                All_wares.config(state="readonly")
+                ware_index = wares_id[0]
+                btn_add_to_list.config(state="normal")
+                price = str(sql_commands.get_sell_price(ware_index))
+                ent_price.delete(0, END)  # this will delete everything inside the entry
+                ent_price.insert(END, price)
+            else:
+                All_wares.set("")
+                ware_index = None
+                All_wares.config(state="disabled")
+                btn_add_to_list.config(state="disabled")
+                ent_price.delete(0, END)  # this will delete everything inside the entry
+                ent_price.insert(END, "")
+        else:
+            All_wares.config(state="disabled")
 
     # ====================== Binds =======================================
     All_categories.bind('<<ComboboxSelected>>', changed_combos)
