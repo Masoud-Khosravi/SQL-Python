@@ -50,8 +50,8 @@ btn_sales_invoices = Button(SQLWindow, text="Sales invoices", width=15, height=2
 btn_purchase_invoices = Button(SQLWindow, text="Purchase invoices", width=15, height=2, command=view_purchase_invoices)
 btn_customers = Button(SQLWindow, text="Customers", width=15, height=2, command=view_customers)
 btn_sellers = Button(SQLWindow, text="Sellers", width=15, height=2, command=view_sellers)
-btn_add_Sell = Button(SQLWindow, text="Add Sell", width=15, height=2)
-btn_add_Buy = Button(SQLWindow, text="Add Buy", width=15, height=2)
+btn_add_Sell = Button(SQLWindow, text="Add Sell", width=15, height=2, command=lambda: new_window(False))
+btn_add_Buy = Button(SQLWindow, text="Add Buy", width=15, height=2, command=lambda: new_window(True))
 
 # ========================== SQLWindow ListBox And  Scrollbar ==========================
 list1 = Listbox(SQLWindow, width=80, height=15, activestyle='none', bg='#F7FF99')
@@ -70,6 +70,195 @@ sb1.grid(row=2, column=5, rowspan=6, ipady=90)
 
 btn_add_Sell.grid(row=2, column=7, padx=5)
 btn_add_Buy.grid(row=3, column=7, padx=5)
+
+
+# ========================== SQL_New_Window Setting =======================
+def new_window(is_buy=False):
+    new_win = Toplevel(SQLWindow)
+    new_win.geometry("850x280")
+    s = Style()
+    s.theme_use('clam')
+
+    new_win.resizable(width=False, height=False)
+
+    users = []
+    user_id = []
+    if is_buy:
+        new_win.title("New Buy")
+        text_lbl = "Select the seller"
+        result = sql_commands.view_sellers()
+    else:
+        new_win.title("New Sell")
+        text_lbl = "Select the customer"
+        result = sql_commands.view_customers()
+    for s in result:
+        user_id.append(s[0])
+        users.append(s[1])
+
+    # ===================== Commands functions =============================
+    def clear_list_invoice():
+        for item in list_invoice.get_children():
+            list_invoice.delete(item)
+        calculate_sum()
+        default_values()
+
+    def fill_list_invoice():
+        pass
+
+    def default_values():
+        ent_values.delete(0, END)
+        ent_price.delete(0, END)
+        All_users.config(state="readonly")
+        btn_save.config(state="disabled")
+        btn_add_to_list.config(state="disabled")
+        btn_clear_list.config(state="disabled")
+        All_wares.config(state="disabled")
+        All_wares.set("")
+        All_brands.current(0)
+        All_categories.current(0)
+        All_users.current(0)
+
+    def save_fuc():
+        new_win.destroy()
+
+    def calculate_sum():
+        sum_vals = 0
+        for child in list_invoice.get_children():
+            item = list_invoice.item(child)["values"]
+            value = int(item[4])
+            price = float(item[5])
+            sum_vals += value * price
+        sum_vals = str(sum_vals)
+        ent_sum.config(state="normal")
+        ent_sum.delete(0, END)  # this will delete everything inside the entry
+        ent_sum.insert(END, sum_vals)
+        ent_sum.config(state="readonly")
+
+    # =======================  Labels ============================================
+    lbl_user = Label(new_win, text=text_lbl, font=("Times New Roman", 12))
+    lbl_catq = Label(new_win, text='Select The Categories', font=("Times New Roman", 12))
+    lbl_brands = Label(new_win, text='Select The Brands', font=("Times New Roman", 12))
+    lbl_wares = Label(new_win, text='Select The ware', font=("Times New Roman", 12))
+    lbl_vals = Label(new_win, text='How many : ', font=("Times New Roman", 12))
+    lbl_price = Label(new_win, text='Enter The Price', font=("Times New Roman", 12))
+    lbl_sum = Label(new_win, text='SUM :', font=("Times New Roman", 12))
+
+    # ================================ Combo boxes==========================================
+    user = StringVar()
+    All_users = Combobox(new_win, width=15, textvariable=user, state='readonly')
+    All_users['values'] = users
+
+    categories = []
+    categories_id = []
+    res = sql_commands.view_categories()
+    for s in res:
+        categories_id.append(s[0])
+        categories.append(s[1])
+    cat = StringVar()
+    All_categories = Combobox(new_win, width=15, textvariable=cat, values=categories, state='readonly')
+
+    brands = []
+    brands_id = []
+    res = sql_commands.view_brands()
+    for s in res:
+        brands_id.append(s[0])
+        brands.append(s[1])
+    brand = StringVar()
+    All_brands = Combobox(new_win, width=15, textvariable=brand, state='readonly')
+    All_brands['values'] = brands
+
+    ware = StringVar()
+    All_wares = Combobox(new_win, width=15, textvariable=ware, state='readonly')
+
+    # =================== Entries ==========================================
+    txt_values = StringVar()
+    ent_values = Entry(new_win, textvariable=txt_values)
+
+    txt_sum = StringVar()
+    ent_sum = Entry(new_win, textvariable=txt_sum)
+
+    txt_price = StringVar()
+    ent_price = Entry(new_win, textvariable=txt_price)
+
+    # ==========================  Buttons ==========================
+    btn_add_to_list = Button(new_win, text="Add To List ->", width=12, height=1, font=("Times New Roman", 12),
+                             foreground="green", activeforeground="red", activebackground="white",
+                             command=fill_list_invoice)
+
+    btn_clear_list = Button(new_win, text=" < Clear List >", width=12, height=1, font=("Times New Roman", 12),
+                            command=clear_list_invoice)
+
+    btn_save = Button(new_win, text="Save All", width=12, height=1, font=("Times New Roman", 12),
+                      foreground="black", activeforeground="red", activebackground="yellow", bg="#77CA00",
+                      command=save_fuc)
+    # ====================== List Boxes / TreeViews ====================================
+    # Add a Treeview widget
+    list_invoice = Treeview(new_win, column=("c1", "c2", "c3", "c4", "c5", "c6"), show='headings', height=8)
+
+    list_invoice.column("c1", width=25)
+    list_invoice.heading("c1", text="ID")
+    list_invoice.column("c2", width=80, anchor=CENTER)
+    list_invoice.heading("c2", text="Name")
+    list_invoice.column("c3", width=80, anchor=CENTER)
+    list_invoice.heading("c3", text="Brand")
+    list_invoice.column("c4", width=80, anchor=CENTER)
+    list_invoice.heading("c4", text="Categories")
+    list_invoice.column("c5", width=60, anchor=CENTER)
+    list_invoice.heading("c5", text="Value")
+    list_invoice.column("c6", width=80, anchor=CENTER)
+    list_invoice.heading("c6", text="Price")
+
+    sb_invoice = Scrollbar(new_win, width=20)
+    list_invoice.configure(yscrollcommand=sb_invoice.set)
+    sb_invoice.configure(command=list_invoice.yview)
+    # =================== Grids  ==========================================
+    lbl_user.grid(row=1, column=1, pady=5)
+    All_users.grid(row=1, column=2, pady=5)
+    lbl_catq.grid(row=2, column=1, pady=5)
+    All_categories.grid(row=2, column=2, pady=5)
+    lbl_brands.grid(row=3, column=1, pady=5)
+    All_brands.grid(row=3, column=2, pady=5)
+    lbl_wares.grid(row=4, column=1, pady=5)
+    All_wares.grid(row=4, column=2, pady=5)
+    lbl_vals.grid(row=5, column=1, pady=5)
+    ent_values.grid(row=5, column=2, pady=5)
+    lbl_price.grid(row=6, column=1, pady=5)
+    ent_price.grid(row=6, column=2, pady=5)
+    lbl_sum.grid(row=6, column=4, pady=5)
+    ent_sum.grid(row=6, column=5, pady=5)
+
+    btn_add_to_list.grid(row=5, column=3, pady=5, padx=10)
+    btn_clear_list.grid(row=3, column=3, pady=5, padx=10)
+    btn_save.grid(row=6, column=6, pady=5, padx=10)
+
+    list_invoice.grid(row=1, column=4, rowspan=5, columnspan=4, pady=5)
+    sb_invoice.grid(row=1, column=8, rowspan=5, ipady=60)
+
+    btn_save.config(state="disabled")
+    btn_add_to_list.config(state="disabled")
+    btn_clear_list.config(state="disabled")
+    All_wares.config(state="disabled")
+    ent_sum.config(state="readonly")
+
+    # ===================== event functions ==============================
+    def changed_users(event):
+        pass
+
+    def changed_wares(event):
+        pass
+
+    def changed_combos(event):
+        pass
+
+    # ====================== Binds =======================================
+    All_categories.bind('<<ComboboxSelected>>', changed_combos)
+    All_brands.bind('<<ComboboxSelected>>', changed_combos)
+    All_wares.bind('<<ComboboxSelected>>', changed_wares)
+    All_users.bind('<<ComboboxSelected>>', changed_users)
+
+    default_values()
+    new_win.wait_window()
+
 
 # ==========================   Main Loop =========================================
 SQLWindow.mainloop()
