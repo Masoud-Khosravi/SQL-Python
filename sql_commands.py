@@ -25,7 +25,7 @@ def view_sellers():
     return rows
 
 
-# ================================ Get All objects From Categories Table ======================================
+# ================================ Get All items From Categories Table ======================================
 def view_categories():
     conn = pyodbc.connect('DRIVER={};Server={};Database={}; Trusted_Connection=yes;'.format(DRV, SRV, DB))
     cursor = conn.cursor()
@@ -35,7 +35,7 @@ def view_categories():
     return rows
 
 
-# ================================ Get All objects From Brands Table ======================================
+# ================================ Get All items From Brands Table ======================================
 def view_brands():
     conn = pyodbc.connect('DRIVER={};Server={};Database={}; Trusted_Connection=yes;'.format(DRV, SRV, DB))
     cursor = conn.cursor()
@@ -45,7 +45,7 @@ def view_brands():
     return rows
 
 
-# ======== Get All objects From Sells Table And join With Users To Find Out Customers Name ====================
+# ======== Get All items From Sells Table And join With Users To Find Out Customers Name ====================
 def view_sells():
     conn = pyodbc.connect('DRIVER={};Server={};Database={}; Trusted_Connection=yes;'.format(DRV, SRV, DB))
     cursor = conn.cursor()
@@ -57,7 +57,7 @@ def view_sells():
     return rows
 
 
-# ================================ Get All objects From Buys Table ======================================
+# ================================ Get All items From Buys Table ======================================
 def view_buys():
     conn = pyodbc.connect('DRIVER={};Server={};Database={}; Trusted_Connection=yes;'.format(DRV, SRV, DB))
     cursor = conn.cursor()
@@ -82,7 +82,7 @@ def get_sell_price(ware_id):
     return rows
 
 
-# ============================ Get All objects From WAres Table By brand_ID and Categories_Id ====================
+# ============================ Get All items From WAres Table By brand_ID and Categories_Id ====================
 def view_wares(brand_id, category_id):
     conn = pyodbc.connect('DRIVER={};Server={};Database={}; Trusted_Connection=yes;'.format(DRV, SRV, DB))
     cursor = conn.cursor()
