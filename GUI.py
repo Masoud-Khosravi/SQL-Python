@@ -50,6 +50,8 @@ btn_sales_invoices = Button(SQLWindow, text="Sales invoices", width=15, height=2
 btn_purchase_invoices = Button(SQLWindow, text="Purchase invoices", width=15, height=2, command=view_purchase_invoices)
 btn_customers = Button(SQLWindow, text="Customers", width=15, height=2, command=view_customers)
 btn_sellers = Button(SQLWindow, text="Sellers", width=15, height=2, command=view_sellers)
+btn_add_Sell = Button(SQLWindow, text="Add Sell", width=15, height=2)
+btn_add_Buy = Button(SQLWindow, text="Add Buy", width=15, height=2)
 
 # ========================== SQLWindow ListBox And  Scrollbar ==========================
 list1 = Listbox(SQLWindow, width=80, height=15, activestyle='none', bg='#F7FF99')
@@ -65,6 +67,9 @@ btn_sellers.grid(row=1, column=4, padx=5, pady=10)
 
 list1.grid(row=2, column=1, rowspan=6, columnspan=4, pady=10)
 sb1.grid(row=2, column=5, rowspan=6, ipady=90)
+
+btn_add_Sell.grid(row=2, column=7, padx=5)
+btn_add_Buy.grid(row=3, column=7, padx=5)
 
 # ==========================   Main Loop =========================================
 SQLWindow.mainloop()
