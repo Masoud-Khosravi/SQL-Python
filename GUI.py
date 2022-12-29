@@ -103,7 +103,19 @@ def new_window(is_buy=False):
         default_values()
 
     def fill_list_invoice():
-        pass
+        item = [ware_index, All_wares.get(), All_brands.get(), All_categories.get(), ent_values.get(), ent_price.get()]
+        list_invoice.insert('', 'end', values=item)
+        All_brands.current(0)
+        All_categories.current(0)
+        All_wares.set("")
+        All_wares.config(state="disabled")
+        btn_add_to_list.config(state="disabled")
+        ent_values.delete(0, END)
+        ent_price.delete(0, END)
+        All_users.config(state="disabled")
+        btn_save.config(state="normal")
+        btn_clear_list.config(state="normal")
+        calculate_sum()
 
     def default_values():
         ent_values.delete(0, END)
