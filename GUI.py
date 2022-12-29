@@ -131,6 +131,28 @@ def new_window(is_buy=False):
         All_users.current(0)
 
     def save_fuc():
+        Now = time.strftime('%Y-%m-%d %H:%M:%S')
+        if is_buy:
+            # print("Buy")
+            invoice_id = sql_commands.add_buy(user_index, ent_sum.get(), Now)
+            if invoice_id > 0:
+                for child in list_invoice.get_children():
+                    item = list_invoice.item(child)["values"]
+                    ware_id = int(item[0])
+                    value = int(item[4])
+                    price = float(item[5])
+                    sql_commands.add_buy_details(invoice_id, ware_id, value, price)
+        else:
+            # print("Sell")
+            invoice_id = sql_commands.add_sale(user_index, ent_sum.get(), Now)
+            if invoice_id > 0:
+                for child in list_invoice.get_children():
+                    item = list_invoice.item(child)["values"]
+                    ware_id = int(item[0])
+                    value = int(item[4])
+                    price = float(item[5])
+                    sql_commands.add_sale_details(invoice_id, ware_id, value, price)
+        messagebox.showinfo(message=f'All Data Saved -> time:{Now} , ID: {invoice_id}')
         new_win.destroy()
 
     def calculate_sum():
