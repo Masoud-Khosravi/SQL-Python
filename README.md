@@ -1,5 +1,16 @@
-#  USE SQL SERVER FILES IN PYTHON
-## Hello and Wellcome
+<div align="center">
+
+# USE $\color{Yellow}SQL \space Server$ Files in $\color{#1DADFF}Python$ 
+
+![GitHub last commit](https://img.shields.io/github/last-commit/Masoud-Khosravi/SQL-Python)
+![GitHub repo file count](https://img.shields.io/github/directory-file-count/Masoud-Khosravi/SQL-Python)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Masoud-Khosravi/SQL-Python)  
+
+
+# $\color{red}Hello \space \color{lightblue}and \space \color{orange}Wellcome$
+
+</div>
+
 ### In This Project We Try to use some SQL structure in python
 ## For Example:
 + Connecting to sql server
